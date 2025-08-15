@@ -6,7 +6,7 @@ const adminRouter =express.Router();
 
 adminRouter.post('/login', adminLogin);
 adminRouter.get('/comments', auth, getAllComments);
-adminRouter.get('/blogs', getAllBlogsAdmin);
+adminRouter.get('/blog', getAllBlogsAdmin);
 adminRouter.post('/delete-comment', auth, deleteCommentById);
 adminRouter.post('/approve-comment', auth, approveCommentById);
 adminRouter.get('/dashboard', auth, getDashboard);

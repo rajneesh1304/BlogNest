@@ -7,7 +7,7 @@ const Footer = () => {
             <div className='flex flex-col md:flex-row items-start justify-between gap-10 py-10 border-b border-gray-500/30 text-gray-500'>
                 <div>
                     <img src={assets.logo} alt="logo" className='w-32 sm:w-44' />
-                    <p className='max-w-[410px] mt-6'>Lorem ipsum dolor sit amet consect Lorem ipsum dolor sit amet consectetur adipisicing elit. ducimus non voluptate voluptates molestiae quasi sunt. Eaque.</p>
+                    <p className='max-w-[410px] mt-6'>QuickBlog is a modern blogging platform that makes creating, managing, and sharing content effortless, with secure CRUD operations and organized categories and tags. It features a clean, responsive interface that ensures a seamless experience for writers and fast, easy browsing for readers.</p>
                 </div>
 
                 <div className='flex flex-wrap justify-between w-full md:w-[45%] gap-5'>

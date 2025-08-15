@@ -5,27 +5,57 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Moment from 'moment';
 import Loader from '../components/Loader';
+import { useAppContext } from '../context/AppContext';
+import toast from 'react-hot-toast';
 
 const Blog = () => {
   const { id } = useParams()
+  const {axios} = useAppContext();
+
   const [data, setData] = useState(null);
   const [comments, setComments] = useState([]);
-
-
   const [name, setName] = useState('');
   const [content, setContent] = useState('');
 
   const fetchBlogData = async () => {
-    const data = blog_data.find((item) => item._id === id)
-    setData(data);
+    try {
+      const {data}=await axios.get(`/api/blog/${id}`);
+      data.success? setData(data.blog) : toast.error(data.message);
+    } catch (error) {
+      toast.error(error.message);
+    }
   }
-
+  
   const fetchComments = async () => {
-    setComments(comments_data);
+    try {
+      const {data}=await axios.post('/api/blog/comments', {blogId: id});
+      if(data.success){
+        setComments(data.comments);
+      }else {
+
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   }
 
   const addComment = async (e) => {
     e.preventDefault();
+    try {
+      const {data}= await axios.post('/api/blog/add-comment', {blog: id, name, content});
+      if(data.success){
+        toast.success(data.message);
+        setName('')
+        setContent('')
+      }else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      
+    }
+
   }
 
   useEffect(() => {
@@ -50,7 +80,7 @@ const Blog = () => {
         <div className='rich-text max-w-3xl mx-auto' dangerouslySetInnerHTML={{ '__html': data.description }}></div>
 
         {/* Comment section */}
-        <div className='mt -14 mb-10 max-w-3xl mx-auto'>
+        <div className='mt-14 mb-10 max-w-3xl mx-auto'>
           <p className='font-semibold mb-4'>Comments {comments.length}</p>
           <div className='flex flex-col gap-4'>
             {comments.map((item, index) => (
@@ -68,10 +98,10 @@ const Blog = () => {
 
         <div className='max-w-3xl mx-auto'>
           <p className='font-semibold mb-4'>Add your comment</p>
-          <form onSubmit={addComment} className='flex flex-col items-satart gap-4 max-w-lg'>
+          <form onSubmit={addComment} className='flex flex-col items-start gap-4 max-w-lg'>
             <input type="text" placeholder='Name' value={name} required className='w-full p-2 border border-gray-300 rounded outline-none' onChange={(e) => setName(e.target.value)} />
 
-            <textarea name="" onChange={(e) => { setContent(e.target.value) }} value={content} placeholder='Comment' className='w-full p-2 border border=gray-300 rounded outline-none h-48' required></textarea>
+            <textarea name="" onChange={(e) => { setContent(e.target.value) }} value={content} placeholder='Comment' className='w-full p-2 border border-gray-300 rounded outline-none h-48' required></textarea>
 
             <button className='bg-primary text-white rounded p-2 px-8 hover:scale-102 transition-all cursor-pointer' type="submit">Submit</button>
           </form>

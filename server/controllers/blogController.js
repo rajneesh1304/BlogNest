@@ -5,11 +5,11 @@ import Comment from "../models/Comment.js";
 
 export const addBlog = async (req, res) => {
     try {
-        const { title, subTitle, description, categroy, isPublished } = JSON.parse(req.body.blog);
+        const { title, subTitle, description, category, isPublished } = JSON.parse(req.body.blog);
         const imageFile = req.file;
 
         // check if all field are present
-        if (!title || !description || !categroy || !imageFile) {
+        if (!title || !description || !category || !imageFile) {
             return res.json({ success: false, message: "Missing required fields" });
         }
 
@@ -42,7 +42,8 @@ export const addBlog = async (req, res) => {
 
 
     } catch (error) {
-        res.json({ success: false, message: "Cant create" });
+        res.status(500).json({ success: false, message: error.message });
+
     }
 }
 
@@ -58,7 +59,7 @@ export const getAllBlogs = async (req, res) => {
 
 export const getBlogById = async (req, res) => {
     try {
-        const { blogId } = res.params;
+        const { blogId } = req.params;
         const blog = await Blog.findById(blogId);
 
         if (!blog) {
@@ -67,14 +68,14 @@ export const getBlogById = async (req, res) => {
 
         res.json({ success: true, blog });
     } catch (error) {
-        req.json({ success: false, message: error.message });
+        res.json({ success: false, message: error.message });
     }
 }
 
 
 export const deleteBlogById = async (req, res) => {
     try {
-        const { id } = res.body;
+        const { id } = req.params;
         await Blog.findByIdAndDelete(id);
 
         //Deleted all comment associated with blog
